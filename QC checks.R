@@ -36,7 +36,6 @@ filter_GWAS(GWAS_files = args[2],
                     remove_Y = TRUE,
                     gzip_output = FALSE,
                     ignore_impstatus = TRUE,
-                    cal_HQ = 0.95,
             
 )
 
