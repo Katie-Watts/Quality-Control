@@ -23,9 +23,6 @@ h_translations <- read.delim("header_translations.txt")
 
 names(data_GWAS) <- header_info$header_h
 
-callrate100 <- max(data_GWAS$N_TOTAL, na.rm = FALSE)
-data_GWAS$CALLRATE <- (data_GWAS$N/callrate100)
-
 # Save with new headings
 
 write.csv(data_GWAS, file=gzfile(args[2]))
@@ -35,9 +32,9 @@ write.csv(data_GWAS, file=gzfile(args[2]))
 filter_GWAS(GWAS_files = args[2],
                     FRQ_HQ = 0.01,
                     imp_HQ = 0.7,
-                    remove_X = TRUE,
+                    remove_X = FALSE,
                     remove_Y = TRUE,
-                    gzip_output = TRUE,
+                    gzip_output = FALSE,
                     ignore_impstatus = TRUE,
                     cal_HQ = 0.95,
             
@@ -45,7 +42,7 @@ filter_GWAS(GWAS_files = args[2],
 
 # Load back in for final checks
 
-data_GWAS <-load_GWAS(args[3])
+data_GWAS <-load_GWAS(args[2])
 
 # Check P-values match other statistics
 
@@ -53,14 +50,8 @@ check_P(data_GWAS,
         plot_correlation = TRUE, plot_if_threshold = FALSE,
         save_name = "STATS_after")
 
-# To calculate a correlation between predicted and actual p-values and plot the correlation:
 
-calc_kurtosis(data_GWAS$EFFECT)
-calc_kurtosis(data_GWAS$EFF_ALL_FREQ)
-
-calc_skewness(data_GWAS$EFFECT)
-calc_skewness(data_GWAS$EFF_ALL_FREQ)
-
+# Plots
 
 QC_plots(data_GWAS,
          plot_QQ = TRUE, plot_Man = TRUE,
