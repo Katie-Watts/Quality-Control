@@ -17,36 +17,9 @@ job <- run.inspector(job)
 ## comprehensive report and result file are already saved in the output folder
 result.inspector(job)
 
-# Load back in for final checks
+# Load files in to create high quality plots
 
 data_GWAS <-load_GWAS("results.txt.gz")
-
-# Check P-values match other statistics
-
-check_P(data_GWAS,
-        plot_correlation = TRUE, plot_if_threshold = FALSE,
-        save_name = "STATS_after")
-
-# To calculate a correlation between predicted and actual p-values and plot the correlation:
-
-calc_kurtosis(data_GWAS$EFFECT)
-calc_kurtosis(data_GWAS$EFF_ALL_FREQ)
-
-calc_skewness(data_GWAS$EFFECT)
-calc_skewness(data_GWAS$EFF_ALL_FREQ)
-
-
-QC_plots(data_GWAS,
-         plot_QQ = TRUE, plot_Man = TRUE,
-         filter_NA = TRUE,
-         plot_cutoff_p = 1, plot_names = FALSE,
-         QQ_colors = c("red", "blue", "orange", "green3", "yellow"),
-         plot_QQ_bands = TRUE,
-         save_name = "dataset", save_dir = getwd(),
-         use_log = FALSE,
-         check_impstatus = FALSE, ignore_impstatus = TRUE,
-         NA_strings = c(NA, "NA", ".", "-"))
-
 
 Cairo::Cairo(
   80, #length
