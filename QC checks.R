@@ -1,7 +1,6 @@
 library(GWASinspector)
 library(qqman)
 library(ggplot2)
-library(QCGWAS)
 
 ## import the QC-configuration file 
 job <- setup.inspector("GWASinspector/config.ini")
