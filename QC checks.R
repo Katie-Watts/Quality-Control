@@ -1,47 +1,25 @@
-#!/usr/bin/env Rscript
-args = commandArgs(trailingOnly=TRUE)
-
+library(GWASinspector)
 library(qqman)
+library(ggplot2)
 library(QCGWAS)
-library(liftOver)
 
-# setwd("")
+## import the QC-configuration file 
+job <- setup.inspector("GWASinspector/config.ini")
 
-# Read in GWAS data
-data_GWAS <-load_GWAS(args[1])
+## check the created instance
+## input result files that will be inspected are also displayed
+job
 
-# Loads translation table 
-h_translations <- read.delim("header_translations.txt")
+## run the algorithm 
+job <- run.inspector(job)
 
-# Apply translation table to standardise headings
-(header_info <-translate_header(header = names(data_GWAS),
-                                standard = c("MARKER", "CHR", "EFFECT",'POSITION', 'EFFECT_ALL',"OTHER_ALL",
-                                             "STRAND", "EFFECT", "STDERR","PVALUE", "EFF_ALL_FREQ",
-                                            "N_TOTAL", "IMP_QUALITY"),
-                                alternative = h_translations) 
-)
-
-names(data_GWAS) <- header_info$header_h
-
-# Save with new headings
-
-write.csv(data_GWAS, file=gzfile(args[2]))
-
-# Filter GWAS for standard parameters
-
-filter_GWAS(GWAS_files = args[2],
-                    FRQ_HQ = 0.01,
-                    imp_HQ = 0.7,
-                    remove_X = FALSE,
-                    remove_Y = TRUE,
-                    gzip_output = FALSE,
-                    ignore_impstatus = TRUE,
-            
-)
+## check the results
+## comprehensive report and result file are already saved in the output folder
+result.inspector(job)
 
 # Load back in for final checks
 
-data_GWAS <-load_GWAS(args[2])
+data_GWAS <-load_GWAS("results.txt.gz")
 
 # Check P-values match other statistics
 
@@ -49,8 +27,14 @@ check_P(data_GWAS,
         plot_correlation = TRUE, plot_if_threshold = FALSE,
         save_name = "STATS_after")
 
+# To calculate a correlation between predicted and actual p-values and plot the correlation:
 
-# Plots
+calc_kurtosis(data_GWAS$EFFECT)
+calc_kurtosis(data_GWAS$EFF_ALL_FREQ)
+
+calc_skewness(data_GWAS$EFFECT)
+calc_skewness(data_GWAS$EFF_ALL_FREQ)
+
 
 QC_plots(data_GWAS,
          plot_QQ = TRUE, plot_Man = TRUE,
@@ -86,8 +70,8 @@ manhattan(data_GWAS,
 dev.off()
 
 Cairo::Cairo(
-  80, #length
-  30, #width
+  50, #length
+  50, #width
   file = paste("QQ", ".png", sep = ""),
   type = "png", #tiff
   bg = "white", #white or transparent depending on your requirement 
@@ -130,7 +114,7 @@ dev.off()
 Cairo::Cairo(
   40, #length
   20, #width
-  file = paste("P-values", ".png", sep = ""),
+  file = paste("Effect size", ".png", sep = ""),
   type = "png", #tiff
   bg = "white", #white or transparent depending on your requirement 
   dpi = 300,
@@ -139,5 +123,4 @@ Cairo::Cairo(
 par(mar=c(5,6,4,1)+.1)
 plot <- hist(data_GWAS$PVALUE, col = "grey", xlab="P-value", main = "Distribution of P-values")
 dev.off()
-
 
