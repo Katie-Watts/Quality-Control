@@ -34,7 +34,7 @@ par(mar=c(5,6,4,1)+.1)
 manhattan(data_GWAS,
           bp = "POSITION", 
           snp = 'MARKER',
-          p = "PVALUE", 
+          p = "P", 
           ylim = c(0, 10), 
           ylab = expression(-log[10]*"("*italic("P")*")"), 
           cex.lab=1.7,
@@ -52,48 +52,5 @@ Cairo::Cairo(
   units = "cm" #you can change to pixels etc 
 )
 par(mar=c(5,6,4,1)+.1)
-qq(data_GWAS$PVALUE)
+qq(data_GWAS$P)
 dev.off()
-
-
-Cairo::Cairo(
-  40, #length
-  20, #width
-  file = paste("Imputation", ".png", sep = ""),
-  type = "png", #tiff
-  bg = "white", #white or transparent depending on your requirement 
-  dpi = 300,
-  units = "cm" #you can change to pixels etc 
-)
-par(mar=c(5,6,4,1)+.1)
-plot <- hist(data_GWAS$IMP_QUALITY, col = "grey", xlab="Imputation quality score", main = "Distribution of imputation quality scores") 
-dev.off()
-
-
-Cairo::Cairo(
-  40, #length
-  20, #width
-  file = paste("Effect size", ".png", sep = ""),
-  type = "png", #tiff
-  bg = "white", #white or transparent depending on your requirement 
-  dpi = 300,
-  units = "cm" #you can change to pixels etc 
-)
-par(mar=c(5,6,4,1)+.1)
-plot <- hist(data_GWAS$EFFECT, col = "grey", xlab="Effect size", main = "Distribution of Effect sizes")
-dev.off()
-
-
-Cairo::Cairo(
-  40, #length
-  20, #width
-  file = paste("Effect size", ".png", sep = ""),
-  type = "png", #tiff
-  bg = "white", #white or transparent depending on your requirement 
-  dpi = 300,
-  units = "cm" #you can change to pixels etc 
-)
-par(mar=c(5,6,4,1)+.1)
-plot <- hist(data_GWAS$PVALUE, col = "grey", xlab="P-value", main = "Distribution of P-values")
-dev.off()
-
