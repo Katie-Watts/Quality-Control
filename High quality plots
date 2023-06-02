@@ -30,8 +30,8 @@ dev.off()
 
 
 Cairo::Cairo(
-  50, #length
-  50, #width
+  40, #length
+  40, #width
   file = paste("QQ", ".png", sep = ""),
   type = "png", #tiff
   bg = "white", #white or transparent depending on your requirement 
