@@ -1,6 +1,11 @@
 # Load files in to create high quality plots
 
-data_GWAS <-load_GWAS("results.txt.gz")
+library(Cairo)
+library(qqman)
+
+QC_files_study_UKBB_severe.txt <- read.delim("QC_files_study_UKBB_severe.txt.gz")
+
+df <- subset(QC_files_study_UKBB_severe.txt, QC_files_study_UKBB_severe.txt$HQ == 1)
 
 Cairo::Cairo(
   80, #length
@@ -12,7 +17,7 @@ Cairo::Cairo(
   units = "cm" #you can change to pixels etc 
 )
 par(mar=c(5,6,4,1)+.1)
-manhattan(data_GWAS,
+manhattan(df,
           bp = "POSITION", 
           snp = 'MARKER',
           p = "P", 
@@ -22,6 +27,7 @@ manhattan(data_GWAS,
           cex.axis=1.7,
           col = c("navyblue", "dodgerblue2"))
 dev.off()
+
 
 Cairo::Cairo(
   50, #length
@@ -35,3 +41,5 @@ Cairo::Cairo(
 par(mar=c(5,6,4,1)+.1)
 qq(data_GWAS$P)
 dev.off()
+
+write.table(df, file= "UKBB_Severe.txt", sep = "\t", row.names = FALSE, col.names = TRUE, quote = FALSE)
